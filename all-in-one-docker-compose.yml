@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+    mysql:
+      image: mysql:5.7
+      container_name: cxcxc_sysops_mysql
+      volumes:
+        - $PWD/mysql_data:/var/lib/mysql
+        - $PWD/mysql_log:/var/log/mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: cxcxc_sysops
+        MYSQL_DATABASE: wordpress
+        MYSQL_USER: cxcxc_admin
+        MYSQL_PASSWORD: cxcxc
+
+    wordpress:
+      depends_on:
+        - mysql
+      image: wordpress:latest
+      container_name: cxcxc_sysops_wordpress
+      ports:
+        - "80:80"
+        - "443:443"
+      restart: always
+      volumes:
+        - $PWD/html:/var/www/html
+        - $PWD/apache2_log:/var/log/apache2
+      environment:
+        WORDPRESS_DB_HOST: cxcxc_sysops_mysql:3306
+        WORDPRESS_DB_USER: cxcxc_admin
+        WORDPRESS_DB_PASSWORD: cxcxc
+        WORDPRESS_DB_NAME: wordpress
+
+
+volumes:
+    mysql_data:

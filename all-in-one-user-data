@@ -1,0 +1,19 @@
+#!/bin/bash
+yum update -y
+amazon-linux-extras install -y docker
+yum install -y amazon-cloudwatch-agent
+yum install -y git
+service docker start
+usermod -a -G docker ec2-user
+systemctl enable docker
+curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /bin/docker-compose
+curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+chmod +x /bin/docker-compose
+
+cd /opt
+git clone https://github.com/cxcxc-io/cxcxc_sysops_tutorial.git
+
+cd /opt/cxcxc_sysops_tutorial
+docker-compose  -f all-in-one-docker-compose.yml up -d
